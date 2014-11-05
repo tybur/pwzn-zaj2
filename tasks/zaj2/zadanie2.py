@@ -50,6 +50,20 @@ def filter_animals(animal_list):
 
     :param animal_list:
     """
+    animals_d = {}
+    mass_units = {'g': 1, 'mg': 0.001, 'kg': 1000, 'Mg':1000000}
+    for animal in animal_list:
+        akey = animal['genus'],animal['sex']
+        if akey not in animals_d:
+            animals_d[akey] = animal
+        animal_mass = animal['mass'][0]*mass_units[animal['mass'][1]]
+        animal_mass_d = animals_d[akey]['mass'][0]*mass_units[animals_d[akey]['mass'][1]]
+        if animal_mass < animal_mass_d:
+            animals_d[akey] = animal
+    
+    return list(sorted(animals_d.values(), key=lambda x: (x['genus'], x['name'], -1 if x['sex'][0]=='m' else 1) ))
+    
+
 
 if __name__ == "__main__":
     animals = load_animals()
